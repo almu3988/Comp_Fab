@@ -1,0 +1,55 @@
+import processing.pdf.*;
+
+//int borderStroke = 5;
+
+
+void setup() {
+  size(900, 900);
+  background(255);
+  noFill();
+  noLoop();
+  stroke(0);
+  translate(width / 2, height / 2);
+
+  //square(500, width / 2, height / 2);
+}
+
+void draw() {
+  int numCircles = 100; //number of circles
+  float angleIncrement = TWO_PI / 10; // angle between circles
+  float radiusIncrement = 2; // distance between circles
+  float initialRadius = 4; // starting radius for first circle
+  float radiusGrowth = 1.05; // how circles grow
+
+  for (int i = 0; i < numCircles; i++) { //this function adds the swirled part 
+    float angle = i * angleIncrement;
+    float x = cos(angle) * initialRadius;
+    float y = sin(angle) * initialRadius;
+    float circleSize = initialRadius * pow(radiusGrowth, i);
+
+    //int twoBS = borderStroke*2;
+    //rect(borderStroke, borderStroke, width-twoBS, height-twoBS);
+    
+    ellipse(x, y, circleSize, circleSize); //draw circle
+
+    line(x, y, x, height / 2 ); //vertical lines from the center
+
+    initialRadius += radiusIncrement;
+  }
+}
+
+
+// Handles key press events
+void keyPressed() {
+  // press 's' to save a svg of your drawing
+  if (key == 's') {
+    // Make file name with the currrent date/time
+    String folder = "output";
+    String fileName = "drawing-" + ".pdf";
+    beginRecord(PDF, folder + "/" + fileName);
+    setup();
+    draw();
+    endRecord();
+    println("Saved to file: " + fileName);
+  }
+}
