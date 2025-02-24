@@ -1,0 +1,63 @@
+//Draw capitilized letters I 
+import Turtle.*;
+
+int size = 0;
+int maxSize = 500;
+
+Turtle t;
+
+void setup(){
+  size(900, 900);
+  background(0);
+  stroke(255);
+  strokeWeight(1);
+  t = new Turtle(this);
+  noLoop();
+  //t.right(30);
+  
+  t.penUp();
+  t.penDown();
+  
+}
+
+void draw(){
+  float l = 50;
+  float w = 50;
+  drawI(l, w);
+}
+
+void drawI(float l, float w){
+   push();
+   // Move to starting position (left horizontal bar)
+   t.penUp();
+   t.right(90);
+   t.forward(-l / 2);  // Move back to start left horizontal bar
+   t.penDown();
+
+   // Draw left horizontal bar
+   t.forward(l);
+
+   // Move to vertical line start position
+   t.penUp();
+   t.forward(-l / 2);  // Move back to center
+   t.left(90);  // Face downward
+   t.penDown();
+
+   // Draw vertical line (connects left and right bars)
+   t.forward(w);
+
+   // Move to right horizontal bar position
+   t.penUp();
+   t.right(90);  // Face right
+   t.forward(-l / 2);  // Move back to start right bar
+   t.penDown();
+
+   // Draw right horizontal bar
+   t.forward(l);
+
+   // Return to original position
+   t.penUp();
+   t.forward(-l / 2);
+   t.right(90);
+   pop();
+}
