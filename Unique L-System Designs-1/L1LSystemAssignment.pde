@@ -66,7 +66,7 @@ void draw() {
     lSys2.iterate();
   }
   
-  // ✅ Move Turtle & Draw Second Curve
+  //move Turtle & Draw Second Curve
   t.penUp();
   t.goToPoint(width / 2 + 200, height / 2);  // Shift right
   t.penDown();
