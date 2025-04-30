@@ -1,0 +1,73 @@
+#include <FastLED.h>
+#include <Servo.h>
+
+
+#define LED_PIN A2           // Using analog pin A2 for LED data
+#define NUM_LEDS 23          //Number of lights used
+CRGB leds[NUM_LEDS];
+
+Servo myServo;
+const int servoPin = 9;
+int servoAngle = 0;
+bool servoIncreasing = true;
+
+//DC Motor Setup
+const int EN1 = 3;   // Speed control (PWM)
+const int IN1 = 12;  // Direction pin 1
+const int IN2 = 13;  // Direction pin 2
+
+void setup() {
+  Serial.begin(9600);
+
+  // Setup LED strip
+  FastLED.addLeds<WS2812B, LED_PIN, GRB>(leds, NUM_LEDS);
+  FastLED.setBrightness(100); //Brightness
+
+  // Setup SG90 servo
+  myServo.attach(servoPin);
+  myServo.write(servoAngle);
+
+  // Setup motor control pins
+  pinMode(EN1, OUTPUT);
+  pinMode(IN1, OUTPUT);
+  pinMode(IN2, OUTPUT);
+}
+
+void loop() {
+  //Rainbow Lights
+  static uint8_t baseHue = 0;
+  for (int i = 0; i < NUM_LEDS; i++) {
+    leds[i] = CHSV(baseHue + i * 10, 255, 255); // hue offset per LED
+  }
+  FastLED.show();
+  baseHue++; // animate the rainbow
+
+  //servo
+  static unsigned long previousServoMillis = 0;
+  const int servoInterval = 20;
+  if (millis() - previousServoMillis >= servoInterval) {
+    previousServoMillis = millis();
+
+    if (servoIncreasing) {
+      servoAngle++;
+      if (servoAngle >= 180) {
+        servoAngle = 180;
+        servoIncreasing = false;
+      }
+    } else {
+      servoAngle--;
+      if (servoAngle <= 0) {
+        servoAngle = 0;
+        servoIncreasing = true;
+      }
+    }
+    myServo.write(servoAngle);
+  }
+
+  //rotation
+  digitalWrite(IN1, HIGH);
+  digitalWrite(IN2, LOW);
+  analogWrite(EN1, 80); // Adjust speed: 0–255
+
+  delay(10); //Short delay for responsiveness
+}
